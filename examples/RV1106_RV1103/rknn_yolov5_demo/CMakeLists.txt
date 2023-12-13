@@ -13,8 +13,8 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 # rknn api
-set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../../runtime/RV1106/${CMAKE_SYSTEM_NAME}/librknn_api)
-set(RKNN_RT_LIB ${RKNN_API_PATH}/armhf/librknnmrt.so)
+set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../../runtime/${CMAKE_SYSTEM_NAME}/librknn_api)
+set(RKNN_RT_LIB ${RKNN_API_PATH}/armhf-uclibc/librknnmrt.so)
 
 include_directories(${RKNN_API_PATH}/include)
 include_directories(${CMAKE_SOURCE_DIR}/../../3rdparty)

@@ -1,9 +1,16 @@
-rknn_matmul_api_demo是一个使用matmul C API在NPU上执行int8矩阵乘法的示例。
+rknn_matmul_api_demo是一个使用matmul C API在NPU上执行矩阵乘法的示例。
 
 
 用法:
 ```
-./rknn_matmul_api_demo
+Usage:
+./rknn_matmul_api_demo <matmul_type> <M> <K> <N> <B_layout> <AC_layout> <loop_count>
+        matmul_type = 1: RKNN_FLOAT16_MM_FLOAT16_TO_FLOAT32
+        matmul_type = 2: RKNN_INT8_MM_INT8_TO_INT32
+        matmul_type = 10: RKNN_INT4_MM_INT4_TO_INT16
+Example: A = [4,64], B = [64,32], int8 matmul test command as followed:
+./rknn_matmul_api_demo 2 4 64 32
+
 ```
 以下 <TARGET_PLATFORM> 表示RK3566_RK3568、RK3562或RK3588。
 
@@ -40,7 +47,7 @@ cd /userdata/rknn_matmul_api_demo_Linux/
 
 ```
 export LD_LIBRARY_PATH=./lib
-./rknn_matmul_api_demo
+./rknn_matmul_api_demo 2 4 64 32
 ```
 
 # Android 示例
@@ -70,5 +77,5 @@ cd /data/rknn_matmul_api_demo_Android/
 
 ```
 export LD_LIBRARY_PATH=./lib
-./rknn_matmul_api_demo
+./rknn_matmul_api_demo 2 4 64 32
 ```

@@ -9,7 +9,7 @@ fi
 
 BUILD_TYPE=Release
 
-TARGET_SOC="rk356x"
+TARGET_SOC="RK3566_RK3568"
 
 ROOT_PWD=$( cd "$( dirname $0 )" && cd -P "$( dirname "$SOURCE" )" && pwd )
 

@@ -104,7 +104,7 @@ export LD_LIBRARY_PATH=./lib:<LOCATION_LIBRGA.SO>
 ```
 For converting to h264 via the ffmpeg ：
 ```
-ffmpeg -i xxx.mp4 -vcodec h264 out.h264
+ffmpeg -i xxx.mp4 -vcodec h264 xxx.h264
 ```
 
 - H265
@@ -113,7 +113,7 @@ ffmpeg -i xxx.mp4 -vcodec h264 out.h264
 ```
 For converting to h265 via the ffmpeg ：
 ```
-ffmpeg -i xxx.mp4 -vcodec hevc out.hevc
+ffmpeg -i xxx.mp4 -vcodec hevc xxx.hevc
 ```
 - RTSP
 ```
@@ -124,3 +124,4 @@ ffmpeg -i xxx.mp4 -vcodec hevc out.hevc
 
 - **RK3562 only supports h264 video stream **
 - **rtsp video stream only available on the Linux system **
+- **The h264 name of the video stream input cannot be "out.h264", it will be overwritten.**

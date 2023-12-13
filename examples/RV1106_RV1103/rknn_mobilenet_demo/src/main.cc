@@ -23,10 +23,14 @@
 #include <string.h>
 #include <sys/time.h>
 
+#include "fp16/Float16.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include <stb/stb_image_resize.h>
+
+using namespace rknpu2;
 
 /*-------------------------------------------
                   Functions
@@ -240,6 +244,35 @@ int NC1HWC2_int8_to_NCHW_float(const int8_t *src, float *dst, int *dims, int cha
 
   return 0;
 }
+
+// 量化模型的npu输出结果为fp16数据类型，后处理要按照fp16数据类型处理
+// 如下提供了fp16排布的NC1HWC2转换成float的nchw转换代码
+int NC1HWC2_fp16_to_NCHW_fp32(const float16* src, float* dst, int* dims, int channel, int h, int w, int zp, float scale)
+{
+  int batch  = dims[0];
+  int C1     = dims[1];
+  int C2     = dims[4];
+  int hw_src = dims[2] * dims[3];
+  int hw_dst = h * w;
+  for (int i = 0; i < batch; i++) {
+    const float16* src_b = src + i * C1 * hw_src * C2;
+    float*         dst_b = dst + i * channel * hw_dst;
+    for (int c = 0; c < channel; ++c) {
+      int            plane  = c / C2;
+      const float16* src_bc = plane * hw_src * C2 + src_b;
+      int            offset = c % C2;
+      for (int cur_h = 0; cur_h < h; ++cur_h)
+        for (int cur_w = 0; cur_w < w; ++cur_w) {
+          int cur_hw                 = cur_h * w + cur_w;
+          dst_b[c * hw_dst + cur_hw] = src_bc[C2 * cur_hw + offset]; // float16-->float
+        }
+    }
+  }
+
+  return 0;
+}
+
+
 
 /*-------------------------------------------
                   Main Functions
@@ -468,8 +501,17 @@ int main(int argc, char *argv[])
       int w = orig_output_attrs[i].n_dims > 3 ? orig_output_attrs[i].dims[3] : 1;
       int zp = output_attrs[i].zp;
       float scale = output_attrs[i].scale;
-      NC1HWC2_int8_to_NCHW_float((int8_t *)output_mems[i]->virt_addr, (float *)output_mems_nchw[i], (int *)output_attrs[i].dims,
+
+      if (orig_output_attrs[i].type == RKNN_TENSOR_INT8) {
+        NC1HWC2_int8_to_NCHW_float((int8_t *)output_mems[i]->virt_addr, (float *)output_mems_nchw[i], (int *)output_attrs[i].dims,
                                  channel, h, w, zp, scale);
+      }
+      else if (orig_output_attrs[i].type == RKNN_TENSOR_FLOAT16) {
+        NC1HWC2_fp16_to_NCHW_fp32((float16*)output_mems[i]->virt_addr, (float*)output_mems_nchw[i],
+                                  (int*)output_attrs[i].dims, channel, h, w, zp, scale);
+      } else {
+        printf("dtype: %s cannot convert!", get_type_string(orig_output_attrs[i].type));
+      }
     }
     else
     {
@@ -481,6 +523,7 @@ int main(int argc, char *argv[])
       }
     }
   }
+
 
   // Get top 5
   uint32_t topNum = 5;

@@ -9,14 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--allow-shlib-undefined")
 
 # rknn api
-if(TARGET_SOC STREQUAL "rk356x" OR TARGET_SOC STREQUAL "rk3562")
-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK356X/${CMAKE_SYSTEM_NAME}/librknn_api)
-elseif(TARGET_SOC STREQUAL "rk3588")
-  set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime/RK3588/${CMAKE_SYSTEM_NAME}/librknn_api)
-else()
-  message(FATAL_ERROR "TARGET_SOC is not set, ref value: rk356x or rk3588")
-endif()
-
+set(RKNN_API_PATH ${CMAKE_SOURCE_DIR}/../../runtime//${CMAKE_SYSTEM_NAME}/librknn_api)
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
   set(RKNN_RT_LIB ${RKNN_API_PATH}/${CMAKE_ANDROID_ARCH_ABI}/librknnrt.so)
 else()
@@ -30,12 +23,14 @@ else()
 endif()
 
 include_directories(${RKNN_API_PATH}/include)
+include_directories(${CMAKE_SOURCE_DIR}/../3rdparty)
 
 set(CMAKE_INSTALL_RPATH "lib")
 
 # rknn_matmul_api_demo
 add_executable(rknn_matmul_api_demo
   src/rknn_matmul_api_demo.cpp
+  src/matmul_utils.cpp
 )
 
 target_link_libraries(rknn_matmul_api_demo

@@ -104,7 +104,7 @@ export LD_LIBRARY_PATH=./lib:<LOCATION_LIBRGA.SO>
 ```
 注意需要使用h264码流视频，可以使用如下命令转换得到：
 ```
-ffmpeg -i xxx.mp4 -vcodec h264 out.h264
+ffmpeg -i xxx.mp4 -vcodec h264 xxx.h264
 ```
 
 - h265视频
@@ -113,7 +113,7 @@ ffmpeg -i xxx.mp4 -vcodec h264 out.h264
 ```
 注意需要使用h265码流视频，可以使用如下命令转换得到：
 ```
-ffmpeg -i xxx.mp4 -vcodec hevc out.hevc
+ffmpeg -i xxx.mp4 -vcodec hevc xxx.hevc
 ```
 - rtsp视频流
 ```
@@ -125,3 +125,4 @@ ffmpeg -i xxx.mp4 -vcodec hevc out.hevc
 - 需要根据系统的rga驱动选择正确的librga库，具体依赖请参考： https://github.com/airockchip/librga
 - **rk3562 目前仅支持h264视频流**
 - **rtsp 视频流Demo仅在Linux系统上支持，Android上目前还不支持**
+- 视频流输入的h264名称不能为"out.h264"，会被覆盖

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-TARGET_SOC="rk3588"
+TARGET_SOC="RK3588"
 
 # for aarch64
 GCC_COMPILER=aarch64-linux-gnu

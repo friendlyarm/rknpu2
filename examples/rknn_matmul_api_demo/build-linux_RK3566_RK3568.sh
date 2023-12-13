@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-TARGET_SOC="rk356x"
-
 # for aarch64
 GCC_COMPILER=aarch64-linux-gnu
 
@@ -17,7 +15,6 @@ fi
 
 cd ${BUILD_DIR}
 cmake ../.. \
-    -DTARGET_SOC=${TARGET_SOC} \
     -DCMAKE_C_COMPILER=${GCC_COMPILER}-gcc \
     -DCMAKE_CXX_COMPILER=${GCC_COMPILER}-g++
 make -j4
