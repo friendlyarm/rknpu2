@@ -1,1 +1,4 @@
 .gitreview
+build/
+install/
+.vscode
